@@ -1,1 +1,2 @@
-# MIT2-Modellek-programozott-feldolgoz-sa
+# MIT2 Modellek programozott feldolgozása
+Szalai Dániel (D5XVAA)
