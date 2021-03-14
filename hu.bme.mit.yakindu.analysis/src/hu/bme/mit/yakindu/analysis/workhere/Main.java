@@ -20,6 +20,7 @@ public class Main {
 		main(new String[0]);
 	}
 	
+	//Name checking method for exercise 2.5 
 	public static boolean isValidAutomaticName(String name, List<String> list) {
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -42,6 +43,7 @@ public class Main {
 		TreeIterator<EObject> iterator = s.eAllContents();
 		List<String> names = new ArrayList<String>();
 		
+		System.out.println("Állapotok:");
 		while (iterator.hasNext()) {
 			EObject content = iterator.next();
 			if(content instanceof State) {
@@ -53,6 +55,7 @@ public class Main {
 		System.out.println();
 		
 		//2.3 feladat
+		System.out.println("Átmenetek:");
 		iterator = s.eAllContents();
 		while (iterator.hasNext()) {
 			EObject content = iterator.next();
