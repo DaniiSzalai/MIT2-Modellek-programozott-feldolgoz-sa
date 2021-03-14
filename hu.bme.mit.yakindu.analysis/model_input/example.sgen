@@ -10,7 +10,7 @@ GeneratorModel for yakindu::java {
 		
 		feature GeneralFeatures {
 			InterfaceObserverSupport = false
-			RuntimeService = true
+			//RuntimeService = true
 			TimerService = true
 		}
 	}

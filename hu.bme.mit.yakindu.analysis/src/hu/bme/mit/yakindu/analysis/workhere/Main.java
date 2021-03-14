@@ -6,10 +6,13 @@ import java.util.List;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
+import org.yakindu.base.types.Direction;
 import org.yakindu.sct.model.sgraph.State;
 import org.yakindu.sct.model.sgraph.Statechart;
 import org.yakindu.sct.model.sgraph.Transition;
 import org.yakindu.sct.model.sgraph.Vertex;
+import org.yakindu.sct.model.stext.stext.EventDefinition;
+import org.yakindu.sct.model.stext.stext.VariableDefinition;
 
 import hu.bme.mit.model2gml.Model2GML;
 import hu.bme.mit.yakindu.analysis.modelmanager.ModelManager;
@@ -106,6 +109,55 @@ public class Main {
 			}
 		}
 		System.out.println();
+		
+		//4.3 feladat
+		System.out.println("Belső változók:");
+		iterator = s.eAllContents();
+		List<String> variables = new ArrayList<String>();
+		List<String> inEvents = new ArrayList<String>();
+		while (iterator.hasNext()) {
+			EObject content = iterator.next();
+			if (content instanceof VariableDefinition) {
+				VariableDefinition variable = (VariableDefinition) content;
+				variables.add(variable.getName());
+			}
+			if (content instanceof EventDefinition) {
+				EventDefinition event = (EventDefinition) content;
+				Direction dir = event.getDirection();
+				if (dir.getValue() == 1) {
+					inEvents.add(event.getName());
+				}
+			}
+		}
+		for (int i= 0; i < variables.size(); i++) {
+			System.out.println(variables.get(i));
+		}
+		System.out.println();
+		
+		System.out.println("Bemenő események:");
+		for (int i= 0; i < inEvents.size(); i++) {
+			System.out.println(inEvents.get(i));
+		}
+		System.out.println();
+		
+		//4.4 feladat
+		System.out.println("public static void print(IExampleStatemachine s) {");
+		for (int i = 0; i < variables.size(); i++) {
+			String name = variables.get(i);
+			name = name.substring(0,1).toUpperCase() + name.substring(1);
+			char firstChar = name.charAt(0);
+			System.out.println("System.out.println(\"" + firstChar + " = \" + s.getSCInterface().get" + name + "());");
+		}
+		/*for (int i = 0; i < inEvents.size(); i++) {
+			String name = inEvents.get(i);
+			name = name.substring(0,1).toUpperCase() + name.substring(1);
+			char firstChar = name.charAt(0);
+			System.out.println("System.out.println(\"" + firstChar + " = \" + s.getSCInterface().get" + name + "());");
+		}*/
+		
+		System.out.println("}");
+		
+		
 		
 		// Transforming the model into a graph representation
 		String content = model2gml.transform(root);
