@@ -35,7 +35,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		ModelManager manager = new ModelManager();
+		/*ModelManager manager = new ModelManager();
 		Model2GML model2gml = new Model2GML();
 		
 		// Loading model
@@ -146,8 +146,9 @@ public class Main {
 			String name = variables.get(i);
 			name = name.substring(0,1).toUpperCase() + name.substring(1);
 			char firstChar = name.charAt(0);
-			System.out.println("System.out.println(\"" + firstChar + " = \" + s.getSCInterface().get" + name + "());");
+			System.out.println("\tSystem.out.println(\"" + firstChar + " = \" + s.getSCInterface().get" + name + "());");
 		}
+		
 		/*for (int i = 0; i < inEvents.size(); i++) {
 			String name = inEvents.get(i);
 			name = name.substring(0,1).toUpperCase() + name.substring(1);
@@ -155,9 +156,65 @@ public class Main {
 			System.out.println("System.out.println(\"" + firstChar + " = \" + s.getSCInterface().get" + name + "());");
 		}*/
 		
+		//System.out.println("}");
+		
+		//4.5 feladat ------------------------------------------------Kódgenerátor-----------------------------------------------------------------------------
+		//A vonal előtti rész és ez a kód független, ha valamelyiket le akarjuk futtatni a másikat ki kell kommentezni.
+		
+		ModelManager manager = new ModelManager();
+		Model2GML model2gml = new Model2GML();
+		
+		// Loading model
+		EObject root = manager.loadModel("model_input/example.sct");
+		
+		// Reading model
+		Statechart s = (Statechart) root;
+		TreeIterator<EObject> iterator = s.eAllContents();
+		
+		List<String> variables = new ArrayList<String>();
+		List<String> inEvents = new ArrayList<String>();
+		
+		while (iterator.hasNext()) {
+			EObject content = iterator.next();
+			if (content instanceof VariableDefinition) {
+				VariableDefinition variable = (VariableDefinition) content;
+				String name = variable.getName();
+				name = name.substring(0,1).toUpperCase() + name.substring(1);
+				variables.add(name);
+			}
+			if (content instanceof EventDefinition) {
+				EventDefinition event = (EventDefinition) content;
+				Direction dir = event.getDirection();
+				if (dir.getValue() == 1) {
+					String name = event.getName();
+					name = name.substring(0,1).toUpperCase() + name.substring(1);
+					inEvents.add(name);
+				}
+			}
+		}
+		
+		System.out.println("while (!exited) {");
+		System.out.println("\tline = reader.readLine().toUpperCase();");
+		System.out.println("\tswitch(line) {");
+		
+		for (int i = 0; i < inEvents.size(); i++) {
+			String upperName = inEvents.get(i).toUpperCase();
+			System.out.println("\tcase \"" + upperName + "\":");
+			System.out.println("\t\ts.raise" + inEvents.get(i) + "();");
+			System.out.println("\t\ts.runCycle();");
+			System.out.println("\t\tprint(s);");
+			System.out.println("\t\tbreak;");
+		}
+		
+		System.out.println("\tcase \"EXIT\":");
+		System.out.println("\t\tprint(s);");
+		System.out.println("\t\tSystem.exit(0);");
+		System.out.println("\t\tbreak;");
+		
+		System.out.println("\tdefault:");
+		System.out.println("\t\tSystem.out.println(\"Nincs ilyen átmenet!\");");
+		System.out.println("\t}");
 		System.out.println("}");
-		
-		
 		
 		// Transforming the model into a graph representation
 		String content = model2gml.transform(root);
